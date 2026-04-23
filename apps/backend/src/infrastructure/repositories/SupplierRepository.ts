@@ -1,4 +1,3 @@
-// Prisma-backed implementation of ISupplierRepository
 import { PrismaClient } from '@prisma/client';
 import { Supplier } from '../../domain/entities/Supplier';
 import {
@@ -16,6 +15,10 @@ export class SupplierRepository implements ISupplierRepository {
 
   async findById(id: string): Promise<Supplier | null> {
     return this.prisma.supplier.findUnique({ where: { id } });
+  }
+
+  async findByEmail(email: string): Promise<Supplier | null> {
+    return this.prisma.supplier.findUnique({ where: { email } });
   }
 
   async create(data: CreateSupplierData): Promise<Supplier> {

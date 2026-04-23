@@ -1,4 +1,3 @@
-// Prisma-backed implementation of ICategoryRepository
 import { PrismaClient } from '@prisma/client';
 import { Category } from '../../domain/entities/Category';
 import {
@@ -16,6 +15,10 @@ export class CategoryRepository implements ICategoryRepository {
 
   async findById(id: string): Promise<Category | null> {
     return this.prisma.category.findUnique({ where: { id } });
+  }
+
+  async findByName(name: string): Promise<Category | null> {
+    return this.prisma.category.findUnique({ where: { name } });
   }
 
   async create(data: CreateCategoryData): Promise<Category> {

@@ -1,18 +1,26 @@
-// API v1 router — mounts all feature routes
 import { Router } from 'express';
+import { container } from '../../infrastructure/container';
+import { createAuthMiddleware } from '../middlewares/authMiddleware';
+import authRoutes from './auth.routes';
+import categoryRoutes from './category.routes';
+import productRoutes from './product.routes';
+import supplierRoutes from './supplier.routes';
+import emailRoutes from './email.routes';
 
 const router = Router();
 
-// Health check endpoint
 router.get('/health', (_req, res) => {
-  res.json({ success: true, message: 'API is running' });
+  res.json({ success: true, data: null, message: 'API is running' });
 });
 
-// Mount feature routes below:
-// router.use('/auth', authRouter);
-// router.use('/users', userRouter);
-// router.use('/categories', categoryRouter);
-// router.use('/products', productRouter);
-// router.use('/suppliers', supplierRouter);
+// Public routes
+router.use('/auth', authRoutes);
+
+// Protected routes
+const authGuard = createAuthMiddleware(container.services.jwtService);
+router.use('/categories', authGuard, categoryRoutes);
+router.use('/products', authGuard, productRoutes);
+router.use('/suppliers', authGuard, supplierRoutes);
+router.use('/email', authGuard, emailRoutes);
 
 export default router;

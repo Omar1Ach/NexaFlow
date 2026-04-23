@@ -1,8 +1,7 @@
-// Category domain entity — groups related products together
 export interface Category {
   id: string;
   name: string;
-  description?: string;
+  description: string | null;
   status: 'ACTIVE' | 'INACTIVE';
   createdAt: Date;
   updatedAt: Date;

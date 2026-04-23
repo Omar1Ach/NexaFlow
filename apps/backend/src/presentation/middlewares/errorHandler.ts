@@ -1,27 +1,50 @@
-// Global error handler middleware — catches all unhandled errors
 import { NextFunction, Request, Response } from 'express';
+import { DomainError } from '../../domain/errors/DomainError';
+import { NotFoundError } from '../../domain/errors/NotFoundError';
+import { ValidationError } from '../../domain/errors/ValidationError';
+import { UnauthorizedError } from '../../domain/errors/UnauthorizedError';
 
-interface ErrorWithStatus extends Error {
-  status?: number;
+interface ErrorResponse {
+  success: false;
+  message: string;
+  errors?: unknown[];
+  stack?: string;
 }
 
 export function errorHandler(
-  err: ErrorWithStatus,
+  err: unknown,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): void {
-  const status = err.status && Number.isInteger(err.status) ? err.status : 500;
-  const response: { success: boolean; message: string; stack?: string } = {
-    success: false,
-    message: err.message || 'Internal Server Error',
-  };
+  const isProd = process.env.NODE_ENV === 'production';
 
-  if (process.env.NODE_ENV !== 'production') {
-    response.stack = err.stack;
+  let status = 500;
+  let message = 'Internal Server Error';
+  let errors: unknown[] | undefined;
+
+  if (err instanceof NotFoundError) {
+    status = 404;
+    message = err.message;
+  } else if (err instanceof ValidationError) {
+    status = 400;
+    message = err.message;
+    errors = err.errors;
+  } else if (err instanceof UnauthorizedError) {
+    status = 401;
+    message = err.message;
+  } else if (err instanceof DomainError) {
+    status = 500;
+    message = err.message;
+  } else if (err instanceof Error) {
+    message = err.message || message;
   }
 
-  res.status(status).json(response);
+  const body: ErrorResponse = { success: false, message };
+  if (errors !== undefined) body.errors = errors;
+  if (!isProd && err instanceof Error && err.stack) body.stack = err.stack;
+
+  res.status(status).json(body);
 }
 
 export default errorHandler;

@@ -1,10 +1,9 @@
-// Supplier domain entity — external vendor providing products
 export interface Supplier {
   id: string;
   company: string;
   contact: string;
   email: string;
-  phone?: string;
+  phone: string | null;
   status: 'ACTIVE' | 'INACTIVE';
   createdAt: Date;
   updatedAt: Date;

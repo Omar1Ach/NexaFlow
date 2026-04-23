@@ -1,13 +1,12 @@
-// Product domain entity — represents inventory items
 export interface Product {
   id: string;
   name: string;
-  description?: string;
+  description: string | null;
   price: number;
   stock: number;
   status: 'ACTIVE' | 'INACTIVE';
   categoryId: string;
-  supplierId?: string;
+  supplierId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
