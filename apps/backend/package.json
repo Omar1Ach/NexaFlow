@@ -1,0 +1,40 @@
+{
+  "name": "nexaflow-backend",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/server.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon --exec tsx src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "tsx src/infrastructure/database/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "axios": "latest",
+    "bcryptjs": "latest",
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "helmet": "latest",
+    "jsonwebtoken": "latest",
+    "morgan": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "latest",
+    "@types/cors": "latest",
+    "@types/express": "latest",
+    "@types/jsonwebtoken": "latest",
+    "@types/morgan": "latest",
+    "@types/node": "latest",
+    "nodemon": "latest",
+    "prisma": "^5.22.0",
+    "ts-node": "latest",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}
